@@ -1,0 +1,12 @@
+{
+	"name": "mongodb",
+	"version": "1.0.0",
+	"description": "MongoDB scripts",
+	"main": "script.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "David Andersson",
+	"license": "ISC"
+}
