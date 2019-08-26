@@ -1,5 +1,5 @@
 {
-	"name": "mongodb",
+	"name": "mongodb-demo",
 	"version": "1.0.0",
 	"description": "MongoDB scripts",
 	"main": "script.js",
@@ -8,5 +8,8 @@
 	},
 	"keywords": [],
 	"author": "David Andersson",
-	"license": "ISC"
+	"license": "ISC",
+	"dependencies": {
+		"mongodb": "^3.3.1"
+	}
 }
