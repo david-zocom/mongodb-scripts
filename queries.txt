@@ -1,0 +1,50 @@
+db.hats.aggregate([
+	{
+		$group: {
+			_id: null,
+			totalPrice: {$sum: "$price"},
+			averagePrice: {$avg: "$price"}
+		}
+	}
+])
+
+db.hats.aggregate([ { $group: { _id: null, totalPrice: {$sum: "$price"}, averagePrice: {$avg: "$price"} } } ])
+
+
+db.hats.aggregate([
+	{
+		$group: {
+			_id: "$color",
+			antal: { $sum: 1 },
+			summa: {
+				$sum: "$price"
+			}
+		}
+	}
+])
+db.hats.aggregate([ { $group: { _id: "$color", antal: { $sum: 1 }, summa: { $sum: "$price" } } } ])
+db.hats.aggregate([ { $group: { _id: {color:"$color", material: "$material"}, antal: { $sum: 1 }, summa: { $sum: "$price" } } } ])
+
+db.hats.aggregate([
+	{
+		$match: { name: "fez", price: { $lt: 100 } }
+	},
+	{
+		$project: {
+			_id: 1,
+			color: 1,
+			material: 1,
+			price: 1
+		}
+	},
+	{
+		$group: {
+			_id: null,
+			totalPrice: {$sum: "$price"},
+			averagePrice: {$avg: "$price"},
+			minPrice: {$min: "$price"},
+			maxPrice: {$max: "$price"}
+		}
+	}
+])
+db.hats.aggregate([ { $match: { name: "fez", price: { $lt: 100 } } }, { $project: { _id: 1, color: 1, material: 1, price: 1 } }, { $group: { _id: null, totalPrice: {$sum: "$price"}, averagePrice: {$avg: "$price"}, minPrice: {$min: "$price"}, maxPrice: {$max: "$price"} } } ])

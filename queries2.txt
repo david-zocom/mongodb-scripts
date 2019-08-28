@@ -1,0 +1,109 @@
+hats: { _id, name, color, material, price }
+
+1 Hur stort värde har alla hattar som finns i lagret?
+
+Gruppera - för att reducera alla dokument till ett värde. Summera priset!
+
+db.hats.aggregate([
+	{
+		$group: {
+			_id: null,
+			totalValue: { $sum: "$price" }
+		}
+	}
+])
+db.hats.aggregate([ { $group: { _id: null, totalValue: { $sum: "$price" } } } ])
+Svar: 298200
+----------------------------------------------------------------
+
+2 Hur många hattar finns det av respektive material?
+Gruppera - en grupp per material. Räkna antalet inom varje grupp (count)
+
+
+fez, red, metal
+cap, blue, metal
+
+db.hats.aggregate([
+	{
+		$group: {
+			_id: "$material",
+			hatCount: { $sum: 1 }
+		}
+	}
+])
+
+db.hats.aggregate([ { $group: { _id: "$material", hatCount: { $sum: 1 } } } ])
+
+
+
+----------------------------------------------------
+3 Välj ut alla rosa eller svarta hattar och ta bort fältet material.
+
+Välja ut - match. Väja ut fält som ska behållas - project.
+
+db.hats.aggregate([
+	{
+		$match: {
+			$or: [
+				{ color: "pink" }, { color: "black" }
+			]
+		}
+	},
+	{
+		$project: {
+			_id: 1,
+			name: 1,
+			color: 1
+		}
+	}
+])
+
+db.hats.aggregate([ { $match: { color: "pink" } } ])
+db.hats.aggregate([ { $match: { $or: [ { color: "pink" }, { color: "black" } ] } } ])
+db.hats.aggregate([ { $match: { $or: [ { color: "pink" }, { color: "black" } ] } }, { $project: { material: 0 } } ])
+----------------------------------------------
+
+4. Vad kostar den billigaste respektive dyraste hatten för varje färg?
+Gruppering på färg, max och min på priset.
+
+db.hats.aggregate([
+	{
+		$group: {
+			_id: "$color",
+			billigast: { $min: "$price" },
+			dyrast: { $max: "$price" },
+			medel: { $avg: "$price" }
+		}
+	}
+])
+
+db.hats.aggregate([ { $group: { _id: "$color", billigast: { $min: "$price" }, dyrast: { $max: "$price" }, medel: { $avg: "$price" } } } ])
+
+-----------------------------------------------
+5. Vilken är den tredje dyraste svarta hatten?
+Välj ut alla svarta hattar. Sortera dem efter pris. Välj ut den tredje med limit och skip.
+
+db.hats.aggregate([
+	{
+		$match: {
+			color: "black"
+		}
+	},
+	{
+		$sort: { price: -1 }
+	},
+	{
+		$limit: 3
+	},
+	{
+		$skip: 2
+	}
+])
+
+db.hats.aggregate([ { $match: { color: "black" } } ])
+db.hats.aggregate([ { $match: { color: "black" } }, { $sort: { price: -1 } } ])
+db.hats.aggregate([ { $match: { color: "black" } }, { $sort: { price: -1 } }, { $limit: 3 }, { $skip: 2 } ])
+db.hats.aggregate([ { $match: { color: "black" } }, { $sort: { price: -1 } }, { $skip: 2 }, { $limit: 1 } ])
+
+
+//
